@@ -25,11 +25,9 @@ defmodule Adventofcode.Day01ChronalCalibrationTest do
   end
 
   describe "first_frequency_repeated_twice/1" do
-    # TODO: Wrong expected result? Should be 1?
-    @tag :skip
     test "+1, -1 first reaches 0 twice." do
       input = "+1, -1"
-      assert 0 = input |> first_frequency_repeated_twice()
+      assert 1 = input |> first_frequency_repeated_twice()
     end
 
     test "+3, +3, +4, -2, -4 first reaches 10 twice." do

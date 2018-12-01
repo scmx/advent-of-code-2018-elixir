@@ -3,41 +3,36 @@ defmodule Adventofcode.Day01ChronalCalibration do
 
   def resulting_frequency(input) do
     input
-    |> frequencies
+    |> parse
     |> Enum.sum()
   end
 
   def first_frequency_repeated_twice(input) do
     input
-    |> frequencies
-    |> do_first_frequency_repeated_twice
+    |> parse
+    |> changes_stream
+    |> reduce_until_repeated_twice
   end
 
-  defp frequencies(input) do
+  defp parse(input) do
     input
     |> String.split(~r/\n|, /)
     |> Enum.map(&String.to_integer/1)
   end
 
-  defp do_first_frequency_repeated_twice(
-         changes,
-         frequency \\ 0,
-         index \\ 0,
-         visited \\ MapSet.new()
-       )
+  defp changes_stream(changes) do
+    Stream.repeatedly(fn -> changes end) |> Stream.flat_map(& &1)
+  end
 
-  defp do_first_frequency_repeated_twice(changes, frequency, index, visited) do
-    frequency = frequency + Enum.at(changes, rem(index, length(changes)))
+  defp reduce_until_repeated_twice(changes) do
+    Enum.reduce_while(changes, {0, MapSet.new()}, fn change, {last, visited} ->
+      resulting_frequency = last + change
 
-    if MapSet.member?(visited, frequency) do
-      frequency
-    else
-      do_first_frequency_repeated_twice(
-        changes,
-        frequency,
-        index + 1,
-        MapSet.put(visited, frequency)
-      )
-    end
+      if MapSet.member?(visited, resulting_frequency) do
+        {:halt, resulting_frequency}
+      else
+        {:cont, {resulting_frequency, MapSet.put(visited, resulting_frequency)}}
+      end
+    end)
   end
 end
