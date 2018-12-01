@@ -10,7 +10,7 @@ defmodule Adventofcode.Day01ChronalCalibration do
   def first_frequency_repeated_twice(input) do
     input
     |> parse
-    |> changes_stream
+    |> Stream.cycle()
     |> reduce_until_repeated_twice
   end
 
@@ -18,10 +18,6 @@ defmodule Adventofcode.Day01ChronalCalibration do
     input
     |> String.split(~r/\n|, /)
     |> Enum.map(&String.to_integer/1)
-  end
-
-  defp changes_stream(changes) do
-    Stream.repeatedly(fn -> changes end) |> Stream.flat_map(& &1)
   end
 
   defp reduce_until_repeated_twice(changes) do
