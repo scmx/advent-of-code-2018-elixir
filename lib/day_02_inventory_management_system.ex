@@ -1,6 +1,10 @@
 defmodule Adventofcode.Day02InventoryManagementSystem do
   use Adventofcode
 
+  alias Adventofcode.Day02InventoryManagementSystem.PartTwo
+
+  defdelegate common_letters(input), to: PartTwo
+
   def checksum(input) do
     input
     |> String.split("\n")

@@ -61,4 +61,23 @@ defmodule Adventofcode.Day02InventoryManagementSystemTest do
       assert 6888 = puzzle_input() |> checksum()
     end
   end
+
+  describe "common_letters/1" do
+    @input """
+    abcde
+    fghij
+    klmno
+    pqrst
+    fguij
+    axcye
+    wvxyz
+    """
+    test "fghij and fguij differ by exactly one character, resulting in fgijv" do
+      assert "fgij" = @input |> common_letters()
+    end
+
+    test_with_puzzle_input do
+      assert "icxjvbrobtunlelzpdmfkahgs" = puzzle_input() |> common_letters()
+    end
+  end
 end
