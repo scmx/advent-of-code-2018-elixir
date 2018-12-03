@@ -29,18 +29,23 @@ defmodule Adventofcode.Day03NoMatterHowYouSliceIt do
 
   def overlapping_fabric(input) do
     input
+    |> parse
+    |> combine_claims
+    |> Enum.filter(fn {_pos, claims} -> length(claims) >= 2 end)
+    |> length
+  end
+
+  defp parse(input) do
+    input
     |> String.trim_trailing("\n")
     |> String.split("\n")
     |> Enum.map(&parse_claim/1)
-    |> combine_claims
-    |> Enum.filter(fn {_pos, count} -> count >= 2 end)
-    |> length
   end
 
   defp combine_claims(claims) do
     Enum.reduce(claims, %{}, fn claim, acc ->
       Enum.reduce(claim.fabric, acc, fn pos, acc ->
-        Map.update(acc, pos, 1, &(&1 + 1))
+        Map.update(acc, pos, [claim.id], &[claim.id | &1])
       end)
     end)
   end
