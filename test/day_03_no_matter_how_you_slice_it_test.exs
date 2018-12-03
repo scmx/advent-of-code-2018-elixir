@@ -80,4 +80,19 @@ defmodule Adventofcode.Day03NoMatterHowYouSliceItTest do
       assert 110_827 = puzzle_input() |> overlapping_fabric()
     end
   end
+
+  describe "non_overlapping_claim/1" do
+    @input """
+    #1 @ 1,3: 4x4
+    #2 @ 3,1: 4x4
+    #3 @ 5,5: 2x2
+    """
+    test "only claim 3 is intact after all claims are made" do
+      assert 3 = @input |> non_overlapping_claim()
+    end
+
+    test_with_puzzle_input do
+      assert 116 = puzzle_input() |> non_overlapping_claim()
+    end
+  end
 end

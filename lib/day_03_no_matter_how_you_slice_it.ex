@@ -35,6 +35,13 @@ defmodule Adventofcode.Day03NoMatterHowYouSliceIt do
     |> length
   end
 
+  def non_overlapping_claim(input) do
+    input
+    |> parse
+    |> find_non_overlapping_claim
+    |> Map.get(:id)
+  end
+
   defp parse(input) do
     input
     |> String.trim_trailing("\n")
@@ -46,6 +53,16 @@ defmodule Adventofcode.Day03NoMatterHowYouSliceIt do
     Enum.reduce(claims, %{}, fn claim, acc ->
       Enum.reduce(claim.fabric, acc, fn pos, acc ->
         Map.update(acc, pos, [claim.id], &[claim.id | &1])
+      end)
+    end)
+  end
+
+  defp find_non_overlapping_claim(claims) do
+    overlap = combine_claims(claims)
+
+    Enum.find(claims, fn claim ->
+      Enum.all?(claim.fabric, fn {x, y} ->
+        Map.get(overlap, {x, y}) == [claim.id]
       end)
     end)
   end
