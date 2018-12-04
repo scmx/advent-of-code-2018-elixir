@@ -26,6 +26,15 @@ defmodule Adventofcode.Day04ReposeRecord do
     |> most_asleep_minute
   end
 
+  def frequent_guard_minute(input) do
+    input
+    |> parse_records
+    |> Enum.filter(&(&1.message == "wakes up"))
+    |> collect_sleep_minutes_for_guards
+    |> frequest_asleep_guard
+    |> most_asleep_minute
+  end
+
   defp parse_records(input) do
     input
     |> String.trim("\n")
@@ -89,5 +98,9 @@ defmodule Adventofcode.Day04ReposeRecord do
     {minute, _} = Enum.max_by(minutes, &elem(&1, 1))
 
     guard_id * minute
+  end
+
+  def frequest_asleep_guard(guards) do
+    Enum.max_by(guards, &Enum.max(Map.values(elem(&1, 1))))
   end
 end
