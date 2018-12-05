@@ -9,6 +9,16 @@ defmodule Adventofcode.Day05AlchemicalReactionTest do
     end
   end
 
+  describe "improved_remaining_units/1" do
+    test "dabAcCaCBAcCcaDA" do
+      assert 4 = "dabAcCaCBAcCcaDA" |> improved_remaining_units()
+    end
+
+    test_with_puzzle_input do
+      assert 0 = puzzle_input() |> improved_remaining_units()
+    end
+  end
+
   describe "apply_reductions/1" do
     test "In aA, a and A react, leaving nothing behind" do
       assert "" = "aA" |> apply_reductions()

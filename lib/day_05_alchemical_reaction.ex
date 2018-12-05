@@ -1,10 +1,29 @@
 defmodule Adventofcode.Day05AlchemicalReaction do
   use Adventofcode
 
+  @pairs Enum.zip(?A..?Z, ?a..?z)
+
   def remaining_units(input) do
     input
     |> apply_reductions
     |> String.length()
+  end
+
+  def improved_remaining_units(input) do
+    @pairs
+    |> Enum.map(&improved_apply_reductions(&1, input))
+    |> Enum.map(&String.length/1)
+    |> Enum.min()
+  end
+
+  def improved_apply_reductions({a, b}, input) do
+    a = to_string([a])
+    b = to_string([b])
+
+    input
+    |> String.replace(a, "")
+    |> String.replace(b, "")
+    |> apply_reductions
   end
 
   def apply_reductions(input) do
