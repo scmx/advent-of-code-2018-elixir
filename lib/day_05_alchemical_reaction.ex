@@ -3,6 +3,12 @@ defmodule Adventofcode.Day05AlchemicalReaction do
 
   def remaining_units(input) do
     input
+    |> apply_reductions
+    |> String.length()
+  end
+
+  def apply_reductions(input) do
+    input
     |> String.to_charlist()
     |> reduce_repeatedly
     |> to_string
