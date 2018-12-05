@@ -20,6 +20,10 @@ defmodule Adventofcode.Day05AlchemicalReactionTest do
       assert "aabAAB" = "aabAAB" |> remaining_units()
     end
 
+    test "Now, consider a larger example, dabAcCaCBAcCcaDA" do
+      assert "dabCBAcaDA" = "dabAcCaCBAcCcaDA" |> remaining_units
+    end
+
     test_with_puzzle_input do
       assert "" = puzzle_input() |> remaining_units()
     end
