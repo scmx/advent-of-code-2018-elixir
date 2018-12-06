@@ -34,6 +34,12 @@ defmodule Adventofcode.Day06ChronalCoordinates do
     Enum.flat_map(range, fn n -> Enum.map(range, &{n, &1}) end)
   end
 
+  def closest_coordinates(grid, locations \\ grid_locations()) do
+    locations
+    |> Enum.map(&{&1, closest_coordinate(&1, grid)})
+    |> Enum.into(%{})
+  end
+
   def closest_coordinate(coordinate, grid) do
     case do_closest(coordinate, grid) |> Enum.sort() do
       [{distance, _}, {distance, _} | _] -> ".."

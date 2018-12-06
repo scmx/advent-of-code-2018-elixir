@@ -69,4 +69,41 @@ defmodule Adventofcode.Day06ChronalCoordinatesTest do
       assert ".." = closest_coordinate({1, 4}, @built_grid)
     end
   end
+
+  describe "closest_coordinates/1" do
+    @expected_grid """
+    0a0a0a0a0a..0c0c0c0c
+    0a0a0a0a0a..0c0c0c0c
+    0a0a0a0d0d0e0c0c0c0c
+    0a0a0d0d0d0e0c0c0c0c
+    ....0d0d0d0e0e0c0c0c
+    0b0b..0d0e0e0e0e0c0c
+    0b0b0b..0e0e0e0e....
+    0b0b0b..0e0e0e0f0f0f
+    0b0b0b..0e0e0f0f0f0f
+    0b0b0b..0f0f0f0f0f0f
+    """
+    test "returns grid where each location knows closest coordinate" do
+      result = @built_grid |> closest_coordinates(grid_locations(0..9))
+
+      expected = String.trim(@expected_grid, "\n")
+      actual = pretty_grid(result)
+
+      assert actual == expected
+    end
+  end
+
+  def print_grid(grid) do
+    grid
+    |> pretty_grid
+    |> IO.puts()
+  end
+
+  def pretty_grid(grid, range \\ 0..9) do
+    Enum.map_join(range, "\n", fn y ->
+      Enum.map_join(range, "", fn x ->
+        grid[{x, y}]
+      end)
+    end)
+  end
 end
