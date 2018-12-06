@@ -34,6 +34,21 @@ defmodule Adventofcode.Day06ChronalCoordinatesTest do
     end
   end
 
+  @built_grid %{
+    {1, 1} => "0A",
+    {1, 6} => "0B",
+    {8, 3} => "0C",
+    {3, 4} => "0D",
+    {5, 5} => "0E",
+    {8, 9} => "0F"
+  }
+
+  describe "build_grid/1" do
+    test "returns a map with all coordinates" do
+      assert @built_grid == build_grid(@parsed_coordinates)
+    end
+  end
+
   describe "names/0" do
     test "returns list of AA .. ZZ coordinate names" do
       assert ["0A", "0B", "0C" | _] = names()

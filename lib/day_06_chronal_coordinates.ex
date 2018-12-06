@@ -17,6 +17,12 @@ defmodule Adventofcode.Day06ChronalCoordinates do
     |> List.to_tuple()
   end
 
+  def build_grid(coordinates) do
+    coordinates
+    |> Enum.zip(names())
+    |> Enum.into(%{})
+  end
+
   def names do
     ?A..?Z
     |> Enum.map(&to_string([&1]))
