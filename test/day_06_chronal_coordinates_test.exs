@@ -12,6 +12,16 @@ defmodule Adventofcode.Day06ChronalCoordinatesTest do
   8, 9
   """
 
+  describe "largest_area_size/1" do
+    test "the size of the largest area is 17" do
+      assert 17 = @coordinates |> largest_area_size()
+    end
+
+    test_with_puzzle_input do
+      assert 4143 = puzzle_input() |> largest_area_size()
+    end
+  end
+
   describe "manhattan_distance/2" do
     test "distance between 0,0 and 1,1 is 2" do
       assert 2 = manhattan_distance({0, 0}, {1, 1})

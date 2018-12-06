@@ -1,6 +1,33 @@
 defmodule Adventofcode.Day06ChronalCoordinates do
   use Adventofcode
 
+  def largest_area_size(input) do
+    input
+    |> parse_coordinates
+    |> build_grid
+    |> finite_area_sizes(grid_locations(-99..599), grid_locations(-100..600))
+    |> hd()
+    |> elem(0)
+  end
+
+  def finite_area_sizes(grid, range1, range2) do
+    area_sizes(grid, range1)
+    |> Enum.zip(area_sizes(grid, range2))
+    |> Enum.filter(fn {{_, n1}, {_, n2}} -> n1 == n2 end)
+    |> Enum.map(fn {{name, size}, _} -> {size, name} end)
+    |> Enum.sort()
+    |> Enum.reverse()
+  end
+
+  def area_sizes(grid, range) do
+    grid
+    |> closest_coordinates(range)
+    |> Map.values()
+    |> Enum.reduce(%{}, &do_sum_area_sizes/2)
+  end
+
+  defp do_sum_area_sizes(name, acc), do: Map.update(acc, name, 1, &(&1 + 1))
+
   def manhattan_distance({x1, y1}, {x2, y2}), do: abs(x1 - x2) + abs(y1 - y2)
 
   def parse_coordinates(input) do
