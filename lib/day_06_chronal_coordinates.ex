@@ -10,6 +10,23 @@ defmodule Adventofcode.Day06ChronalCoordinates do
     |> elem(0)
   end
 
+  def safe_area_size(input, distance) do
+    input
+    |> parse_coordinates
+    |> build_grid
+    |> do_safe_area_size
+    |> Enum.sort_by(fn {_, dist} -> dist end)
+    |> Enum.filter(fn {_, dist} -> dist < distance end)
+    |> length
+  end
+
+  defp do_safe_area_size(grid) do
+    0..360
+    |> grid_locations
+    |> Enum.map(&{&1, distance_to_all_coordinates(&1, grid)})
+    |> Enum.into(%{})
+  end
+
   def finite_area_sizes(grid, range1, range2) do
     area_sizes(grid, range1)
     |> Enum.zip(area_sizes(grid, range2))
@@ -59,6 +76,13 @@ defmodule Adventofcode.Day06ChronalCoordinates do
 
   def grid_locations(range \\ 0..400) do
     Enum.flat_map(range, fn n -> Enum.map(range, &{n, &1}) end)
+  end
+
+  def distance_to_all_coordinates(coordinate, grid) do
+    grid
+    |> Map.keys()
+    |> Enum.map(&manhattan_distance(&1, coordinate))
+    |> Enum.sum()
   end
 
   def closest_coordinates(grid, locations \\ grid_locations()) do

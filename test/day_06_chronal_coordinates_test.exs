@@ -22,6 +22,16 @@ defmodule Adventofcode.Day06ChronalCoordinatesTest do
     end
   end
 
+  describe "safe_area_size/2" do
+    test "the size of the largest area is 17" do
+      assert 16 = @coordinates |> safe_area_size(32)
+    end
+
+    test_with_puzzle_input do
+      assert 35039 = puzzle_input() |> safe_area_size(10000)
+    end
+  end
+
   describe "manhattan_distance/2" do
     test "distance between 0,0 and 1,1 is 2" do
       assert 2 = manhattan_distance({0, 0}, {1, 1})
@@ -77,6 +87,12 @@ defmodule Adventofcode.Day06ChronalCoordinatesTest do
     test "returns closest coordinate for a location and grid" do
       assert "0d" = closest_coordinate({4, 2}, @built_grid)
       assert ".." = closest_coordinate({1, 4}, @built_grid)
+    end
+  end
+
+  describe "distance_to_all_coordinates/2" do
+    test "sums the distances to all coordinates from a location" do
+      assert 30 = distance_to_all_coordinates({4, 3}, @built_grid)
     end
   end
 
