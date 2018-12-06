@@ -33,4 +33,17 @@ defmodule Adventofcode.Day06ChronalCoordinates do
   def grid_locations(range \\ 0..400) do
     Enum.flat_map(range, fn n -> Enum.map(range, &{n, &1}) end)
   end
+
+  def closest_coordinate(coordinate, grid) do
+    case do_closest(coordinate, grid) |> Enum.sort() do
+      [{distance, _}, {distance, _} | _] -> ".."
+      [{_, other_coordinate_name} | _] -> String.downcase(other_coordinate_name)
+    end
+  end
+
+  defp do_closest(coordinate, grid) do
+    Enum.map(grid, fn {other_coordinate, other_coordinate_name} ->
+      {manhattan_distance(coordinate, other_coordinate), other_coordinate_name}
+    end)
+  end
 end

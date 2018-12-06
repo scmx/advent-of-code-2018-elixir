@@ -62,4 +62,11 @@ defmodule Adventofcode.Day06ChronalCoordinatesTest do
       assert [{9, 9}, {9, 8}, {9, 7} | _] = Enum.reverse(grid_locations(0..9))
     end
   end
+
+  describe "closest_coordinate/1" do
+    test "returns closest coordinate for a location and grid" do
+      assert "0d" = closest_coordinate({4, 2}, @built_grid)
+      assert ".." = closest_coordinate({1, 4}, @built_grid)
+    end
+  end
 end
