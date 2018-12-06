@@ -16,4 +16,11 @@ defmodule Adventofcode.Day06ChronalCoordinates do
     |> Enum.map(&String.to_integer/1)
     |> List.to_tuple()
   end
+
+  def names do
+    ?A..?Z
+    |> Enum.map(&to_string([&1]))
+    |> Enum.flat_map(fn a -> Enum.map(0..1, &"#{&1}#{a}") end)
+    |> Enum.sort()
+  end
 end

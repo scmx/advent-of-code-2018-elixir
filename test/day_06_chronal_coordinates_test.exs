@@ -33,4 +33,11 @@ defmodule Adventofcode.Day06ChronalCoordinatesTest do
       assert @parsed_coordinates == @coordinates |> parse_coordinates
     end
   end
+
+  describe "names/0" do
+    test "returns list of AA .. ZZ coordinate names" do
+      assert ["0A", "0B", "0C" | _] = names()
+      assert ["1Z", "1Y", "1X" | _] = Enum.reverse(names())
+    end
+  end
 end
