@@ -15,7 +15,7 @@ defmodule Adventofcode.Day05AlchemicalReactionTest do
     end
 
     test_with_puzzle_input do
-      assert 0 = puzzle_input() |> improved_remaining_units()
+      assert 6136 = puzzle_input() |> improved_remaining_units()
     end
   end
 
