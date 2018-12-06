@@ -55,4 +55,11 @@ defmodule Adventofcode.Day06ChronalCoordinatesTest do
       assert ["1Z", "1Y", "1X" | _] = Enum.reverse(names())
     end
   end
+
+  describe "grid_locations/0" do
+    test "returns all locations in grid" do
+      assert [{0, 0}, {0, 1}, {0, 2} | _] = grid_locations(0..9)
+      assert [{9, 9}, {9, 8}, {9, 7} | _] = Enum.reverse(grid_locations(0..9))
+    end
+  end
 end

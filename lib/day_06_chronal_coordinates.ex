@@ -29,4 +29,8 @@ defmodule Adventofcode.Day06ChronalCoordinates do
     |> Enum.flat_map(fn a -> Enum.map(0..1, &"#{&1}#{a}") end)
     |> Enum.sort()
   end
+
+  def grid_locations(range \\ 0..400) do
+    Enum.flat_map(range, fn n -> Enum.map(range, &{n, &1}) end)
+  end
 end
