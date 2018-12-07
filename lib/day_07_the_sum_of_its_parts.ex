@@ -7,6 +7,7 @@ defmodule Adventofcode.Day07TheSumOfItsParts do
 
   defdelegate steps_completion_time(input, options), to: PartTwo
   defdelegate time_needed(task), to: PartTwo
+  defdelegate build_dependencies(requirements), to: PartTwo
 
   def steps_in_order(input) do
     input

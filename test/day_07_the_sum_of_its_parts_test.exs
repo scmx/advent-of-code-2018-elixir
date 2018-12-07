@@ -84,4 +84,29 @@ defmodule Adventofcode.Day07TheSumOfItsPartsTest do
       assert 6 = "F" |> time_needed
     end
   end
+
+  describe "build_dependencies/1" do
+    test "determines time needed for task based on name" do
+      input = [
+        ["C", "A"],
+        ["C", "F"],
+        ["A", "B"],
+        ["A", "D"],
+        ["B", "E"],
+        ["D", "E"],
+        ["F", "E"]
+      ]
+
+      expected = %{
+        "A" => ["C"],
+        "B" => ["A"],
+        "C" => [],
+        "D" => ["A"],
+        "E" => ["F", "D", "B"],
+        "F" => ["C"]
+      }
+
+      assert expected == input |> build_dependencies
+    end
+  end
 end

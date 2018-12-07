@@ -1,8 +1,14 @@
 defmodule Adventofcode.Day07TheSumOfItsParts.PartTwo do
   use Adventofcode
 
-  @enforce_keys [:steps, :reqs, :workers, :delay]
-  defstruct second: -1, workers: [], steps: [], completed: [], reqs: [], delay: 0, print: false
+  @enforce_keys [:steps, :dependencies, :workers, :delay]
+  defstruct second: -1,
+            workers: [],
+            steps: [],
+            completed: [],
+            dependencies: [],
+            delay: 0,
+            print: false
 
   def steps_completion_time(input, options) do
     input
@@ -20,14 +26,29 @@ defmodule Adventofcode.Day07TheSumOfItsParts.PartTwo do
   end
 
   def new(input, options) do
-    reqs = parse(input)
-    steps = steps_list(reqs)
+    requirements = parse(input)
+    steps = steps_list(requirements)
+    dependencies = build_dependencies(requirements)
     print = Keyword.get(options, :print, false)
     delay = Keyword.get(options, :delay, 60)
     workers = Keyword.get(options, :workers, 5)
     workers = Enum.map(1..workers, fn _ -> {nil, 0} end)
 
-    %__MODULE__{workers: workers, steps: steps, reqs: reqs, delay: delay, print: print}
+    %__MODULE__{
+      workers: workers,
+      steps: steps,
+      dependencies: dependencies,
+      delay: delay,
+      print: print
+    }
+  end
+
+  def build_dependencies(requirements) do
+    deps = requirements |> steps_list |> Enum.map(&{&1, []}) |> Enum.into(%{})
+
+    Enum.reduce(requirements, deps, fn [a, b], acc ->
+      Map.update(acc, b, [a], &[a | &1])
+    end)
   end
 
   def iterate(state) do
@@ -92,10 +113,9 @@ defmodule Adventofcode.Day07TheSumOfItsParts.PartTwo do
 
     unless left == [], do: raise(ArgumentError, message: "left #{inspect(left)}")
 
-    reqs = Enum.reject(state.reqs, fn [a, _] -> Enum.member?(ready, a) end)
-    steps = state.steps -- (ready ++ left)
+    steps = state.steps -- ready
 
-    %{state | workers: workers, steps: steps, reqs: reqs}
+    %{state | workers: workers, steps: steps}
   end
 
   # Worker has no current task, nothing to do
@@ -127,24 +147,23 @@ defmodule Adventofcode.Day07TheSumOfItsParts.PartTwo do
     hd(String.to_charlist(task)) - ?@
   end
 
-  defp steps_list(reqs) do
-    reqs
+  defp steps_list(requirements) do
+    requirements
     |> Enum.flat_map(& &1)
     |> Enum.sort()
     |> Enum.uniq()
   end
 
-  def ready_list(%{steps: steps, reqs: reqs}) do
-    steps
-    |> Enum.filter(&do_ready(&1, reqs))
+  def ready_list(state) do
+    state.steps
+    |> Enum.filter(&do_ready?(&1, state))
     |> Enum.sort()
   end
 
-  defp do_ready(step, reqs) do
-    Enum.all?(reqs, fn
-      [_, ^step] -> false
-      _ -> true
-    end)
+  defp do_ready?(step, state) do
+    state.dependencies
+    |> Map.get(step)
+    |> Enum.all?(&(&1 in state.completed))
   end
 
   def parse_step(line) do
