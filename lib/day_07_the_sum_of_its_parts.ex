@@ -1,7 +1,12 @@
 defmodule Adventofcode.Day07TheSumOfItsParts do
   use Adventofcode
 
+  alias Adventofcode.Day07TheSumOfItsParts.PartTwo
+
   defstruct [:steps, :reqs, :completed]
+
+  defdelegate steps_completion_time(input, options), to: PartTwo
+  defdelegate time_needed(task), to: PartTwo
 
   def steps_in_order(input) do
     input
