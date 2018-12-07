@@ -94,11 +94,6 @@ defmodule Adventofcode.Day07TheSumOfItsParts.PartTwo do
     %{state | workers: workers, completed: completed}
   end
 
-  # Worker 1 is busy, nothing to do
-  def assign_new_tasks(%{workers: [{task, _} | _]} = state)
-      when not is_nil(task),
-      do: state
-
   def assign_new_tasks(state) do
     # Determine ready tasks
     workers_free = Enum.count(state.workers, &(elem(&1, 1) == 0))

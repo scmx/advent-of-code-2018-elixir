@@ -39,7 +39,7 @@ defmodule Adventofcode.Day07TheSumOfItsPartsTest do
     test_with_puzzle_input do
       options = [workers: 5, delay: 60, print: true]
 
-      assert 1337 = puzzle_input() |> steps_completion_time(options)
+      assert 1120 = puzzle_input() |> steps_completion_time(options)
     end
 
     @table """
