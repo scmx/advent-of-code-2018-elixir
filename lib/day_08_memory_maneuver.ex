@@ -43,8 +43,6 @@ defmodule Adventofcode.Day08MemoryManeuver do
     end)
   end
 
-  defp traverse([]), do: nil
-
   defp traverse([children_size, metadata_size | tail]) do
     {%__MODULE__{children_size: children_size, metadata_size: metadata_size}, tail}
     |> traverse_children
