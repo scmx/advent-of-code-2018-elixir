@@ -12,10 +12,35 @@ defmodule Adventofcode.Day08MemoryManeuver do
     |> Enum.sum()
   end
 
+  def root_value(input) do
+    input
+    |> parse
+    |> traverse
+    |> elem(0)
+    |> do_root_value
+    |> Enum.sum()
+  end
+
   defp do_metadata_sum(node) do
     children_metadata = Enum.flat_map(node.children, &do_metadata_sum/1)
     metadata = Tuple.to_list(node.metadata)
     children_metadata ++ metadata
+  end
+
+  defp do_root_value(%{children_size: 0} = node) do
+    node.metadata
+    |> Tuple.to_list()
+    |> Enum.sum()
+    |> List.wrap()
+  end
+
+  defp do_root_value(node) do
+    Enum.flat_map(Tuple.to_list(node.metadata), fn index ->
+      case Enum.at([nil | node.children], index) do
+        nil -> []
+        child -> do_root_value(child)
+      end
+    end)
   end
 
   defp traverse([]), do: nil
