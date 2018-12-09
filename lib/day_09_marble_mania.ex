@@ -1,8 +1,10 @@
 defmodule Adventofcode.Day09MarbleMania do
   use Adventofcode
 
+  alias Adventofcode.Circle
+
   @enforce_keys [:last, :marbles, :players]
-  defstruct turn: 0, last: 0, current: 1, marbles: {}, players: {}
+  defstruct turn: 0, last: 0, marbles: nil, players: {}
 
   def winning_score(input) do
     input
@@ -10,12 +12,20 @@ defmodule Adventofcode.Day09MarbleMania do
     |> play
   end
 
+  def winning_score_times_hundred(input) do
+    input
+    |> new
+    |> Map.update(:last, nil, &(&1 * 100))
+    |> play
+  end
+
   defp new(input) do
     [player_count, last_marble] = parse(input)
 
     players = 1..player_count |> Enum.map(fn _ -> 0 end) |> List.to_tuple()
+    marbles = Circle.new() |> Circle.insert_next(0)
 
-    %__MODULE__{last: last_marble, marbles: {0}, players: players}
+    %__MODULE__{last: last_marble, marbles: marbles, players: players}
   end
 
   defp play(%{turn: turn, last: turn} = state) do
@@ -47,25 +57,31 @@ defmodule Adventofcode.Day09MarbleMania do
   end
 
   def move_backward_seven_times(state) do
-    size = tuple_size(state.marbles)
-    current = rem(state.current - 7 - 1 + size, size) + 1
+    marbles =
+      state.marbles
+      |> Circle.move_prev()
+      |> Circle.move_prev()
+      |> Circle.move_prev()
+      |> Circle.move_prev()
+      |> Circle.move_prev()
+      |> Circle.move_prev()
+      |> Circle.move_prev()
 
-    %{state | current: current}
+    %{state | marbles: marbles}
   end
 
   def move_forward_twice_and_insert_marble(state) do
-    current = rem(state.current, tuple_size(state.marbles)) + 2
-    marbles = Tuple.insert_at(state.marbles, current - 1, state.turn)
+    marbles = Circle.move_next(state.marbles)
 
-    %{state | current: current, marbles: marbles}
+    %{state | marbles: Circle.insert_next(marbles, state.turn)}
   end
 
   def remove_current_marble(state) do
-    %{state | marbles: Tuple.delete_at(state.marbles, state.current)}
+    %{state | marbles: Circle.remove_current(state.marbles)}
   end
 
   def assign_score_to_player(state) do
-    score = state.turn + current_marble(state)
+    score = state.turn + Circle.current(state.marbles)
     players = update_elem(state.players, player_index(state), &(&1 + score))
 
     %{state | players: players}
@@ -73,10 +89,6 @@ defmodule Adventofcode.Day09MarbleMania do
 
   def player_index(state) do
     rem(state.turn - 1, tuple_size(state.players))
-  end
-
-  def current_marble(state) do
-    elem(state.marbles, state.current - 1)
   end
 
   defp parse(input) do
