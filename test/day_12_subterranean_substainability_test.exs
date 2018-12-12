@@ -144,6 +144,12 @@ defmodule Adventofcode.Day12SubterraneanSubstainabilityTest do
     end
   end
 
+  test_with_puzzle_input "fifty billion generations" do
+    options = [generation: 50_000_000_000, view: {-2, 500}]
+
+    assert 1_799_999_999_458 = puzzle_input() |> total_plants(options)
+  end
+
   describe "chunk_with_neighbours/2" do
     test "chunks each character with the two left and two right beside it" do
       expected = [
@@ -154,6 +160,37 @@ defmodule Adventofcode.Day12SubterraneanSubstainabilityTest do
       ]
 
       assert ^expected = ["#", ".", "#", "#"] |> chunk_with_neighbours(5)
+    end
+  end
+
+  describe "fast_forward/1" do
+    test "fast forwards a stabilized state to last generation" do
+      state = %Day12SubterraneanSubstainability{
+        generation: {0, 20},
+        patterns: [
+          "...##",
+          "..#..",
+          ".#...",
+          ".#.#.",
+          ".#.##",
+          ".##..",
+          ".####",
+          "#.#.#",
+          "#.###",
+          "##.#.",
+          "##.##",
+          "###..",
+          "###.#",
+          "####."
+        ],
+        pots: "...#..#.#..##......###...###...........",
+        print: false,
+        stabilized: true,
+        total: 145,
+        view: {-3, 36}
+      }
+
+      assert %{view: {17, 56}} = fast_forward(state)
     end
   end
 end

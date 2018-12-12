@@ -11,6 +11,7 @@ defmodule Adventofcode.Day12SubterraneanSubstainability do
     view: @default_view,
     pots: "",
     patterns: [],
+    stabilized: false,
     total: 0,
     print: false
   )
@@ -36,13 +37,40 @@ defmodule Adventofcode.Day12SubterraneanSubstainability do
 
   def process(%{generation: {last, last}} = state), do: state
 
+  def process(%{stabilized: true} = state) do
+    state
+    |> fast_forward
+    |> update_total
+    |> print()
+    |> process()
+  end
+
   def process(state) do
     state
     |> update_pots
     |> update_generation
     |> update_total
+    |> detect_stabilized(state.pots)
     |> print()
     |> process()
+  end
+
+  def detect_stabilized(%{stabilized: true} = state, _pots_before), do: state
+
+  def detect_stabilized(state, pots_before) do
+    if state.pots <> "." == "." <> pots_before do
+      Map.put(state, :stabilized, true)
+    else
+      state
+    end
+  end
+
+  def fast_forward(state) do
+    %{generation: {current, last}, view: {x1, x2}} = state
+
+    jump = last - current
+
+    %{state | generation: {last, last}, view: {x1 + jump, x2 + jump}}
   end
 
   defp update_pots(state) do
