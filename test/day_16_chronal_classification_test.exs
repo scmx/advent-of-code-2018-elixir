@@ -13,6 +13,47 @@ defmodule Adventofcode.Day16ChronalClassification.Part1Test do
   end
 end
 
+defmodule Adventofcode.Day16ChronalClassification.Part2Test do
+  use Adventofcode.FancyCase
+
+  import Adventofcode.Day16ChronalClassification
+  import Adventofcode.Day16ChronalClassification.Part2
+
+  # Using the samples you collected, work out the number of each opcode
+  describe "map_opcodes_to_operation_names/1" do
+    test_with_puzzle_input do
+      expected = %{
+        0 => :gtrr,
+        1 => :borr,
+        2 => :gtir,
+        3 => :eqri,
+        4 => :addr,
+        5 => :seti,
+        6 => :eqrr,
+        7 => :gtri,
+        8 => :banr,
+        9 => :addi,
+        10 => :setr,
+        11 => :mulr,
+        12 => :bori,
+        13 => :muli,
+        14 => :eqir,
+        15 => :bani
+      }
+
+      assert ^expected = puzzle_input() |> map_opcodes_to_operation_names()
+    end
+  end
+
+  describe "solve/1" do
+    # Execute the test program (the second section of your puzzle input)
+    # What value is contained in register 0 after executing the test program?
+    test_with_puzzle_input do
+      assert 503 = puzzle_input() |> solve()
+    end
+  end
+end
+
 defmodule Adventofcode.Day16ChronalClassification.SamplesTest do
   use Adventofcode.FancyCase
 

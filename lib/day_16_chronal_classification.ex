@@ -16,6 +16,71 @@ defmodule Adventofcode.Day16ChronalClassification do
     end
   end
 
+  defmodule Part2 do
+    alias Adventofcode.Day16ChronalClassification.{Classification, Samples}
+
+    def solve(input) do
+      input
+      |> map_opcodes_to_operation_names()
+      |> run_test_program(parse_test_program(input))
+      |> Map.get(0)
+    end
+
+    def map_opcodes_to_operation_names(input) do
+      input
+      |> Samples.detect_matching_operations()
+      |> do_map_opcodes([], %{}, length(Classification.operation_names()))
+    end
+
+    defp do_map_opcodes(items, rest, acc, expected_count)
+
+    # Done if there's nothing left to map
+    defp do_map_opcodes([], [], acc, _), do: acc
+
+    # Done if all codes have been mapped
+    defp do_map_opcodes(_, _, acc, goal) when map_size(acc) == goal, do: acc
+
+    # Wrap around and check rest when items have all been checked
+    defp do_map_opcodes([], rest, acc, goal) do
+      do_map_opcodes(Enum.reverse(rest), [], acc, goal)
+    end
+
+    # Found opcode with only a sinle match, collect and eliminate possibilities
+    defp do_map_opcodes([{opcode, [name]} | tail], rest, acc, goal) do
+      tail
+      |> eliminate_possibilities(opcode, name)
+      |> do_map_opcodes(rest, Map.put(acc, opcode, name), goal)
+    end
+
+    # Nothing can be done with this one, check the next one
+    defp do_map_opcodes([head | tail], rest, acc, goal) do
+      do_map_opcodes(tail, [head | rest], acc, goal)
+    end
+
+    defp eliminate_possibilities(opcodes, opcode, name) do
+      opcodes
+      |> Enum.reject(fn {code, _} -> code == opcode end)
+      |> Enum.map(fn {code, names} -> {code, names -- [name]} end)
+    end
+
+    defp run_test_program(opcode_mapper, test_program) do
+      Enum.reduce(test_program, %{}, fn {opcode, a, b, c}, acc ->
+        operation_name = Map.fetch!(opcode_mapper, opcode)
+
+        apply(Classification, operation_name, [a, b, c, acc])
+      end)
+    end
+
+    defp parse_test_program(input) do
+      input
+      |> String.split("\n\n\n")
+      |> Enum.at(1)
+      |> String.trim("\n")
+      |> String.split("\n")
+      |> Enum.map(&Samples.parse_line/1)
+    end
+  end
+
   defmodule Samples do
     alias Adventofcode.Day16ChronalClassification.Classification
 
