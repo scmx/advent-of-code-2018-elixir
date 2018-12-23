@@ -27,6 +27,43 @@ defmodule Adventofcode.Day23ExperimentalEmergencyTeleportation.Part1Test do
   end
 end
 
+defmodule Adventofcode.Day23ExperimentalEmergencyTeleportation.Part2Test do
+  use Adventofcode.FancyCase
+
+  import Adventofcode.Day23ExperimentalEmergencyTeleportation
+  import Adventofcode.Day23ExperimentalEmergencyTeleportation.Part2
+
+  @input """
+  pos=<10,12,12>, r=2
+  pos=<12,14,12>, r=2
+  pos=<16,12,12>, r=4
+  pos=<14,14,14>, r=6
+  pos=<50,50,50>, r=200
+  pos=<10,10,10>, r=5
+  """
+
+  describe "solve/1" do
+    test "parses input nanobots coordinates and radiuses" do
+      assert 34 = @input |> solve()
+    end
+
+    @tag :slow
+    test_with_puzzle_input do
+      assert 319 = puzzle_input() |> solve()
+    end
+  end
+
+  describe "coordinate_in_range_of_most_nanobots/1" do
+    test "12,12,12 is in range of the most nanobots: the first five" do
+      {coordinate, nanobots} = @input |> coordinate_in_range_of_most_nanobots()
+
+      assert {12, 12, 12, _} = coordinate
+      assert 5 == length(nanobots)
+      assert 36 == distance_to_zero(coordinate)
+    end
+  end
+end
+
 defmodule Adventofcode.Day23ExperimentalEmergencyTeleportation.NanobotsTest do
   use Adventofcode.FancyCase
 
